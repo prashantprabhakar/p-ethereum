@@ -348,6 +348,9 @@ Please see the [Developers' Guide](https://github.com/ethereum/go-ethereum/wiki/
 for more details on configuring your environment, managing project dependencies, and
 testing procedures.
 
+## Launching
+After building frin source, run "./build/bin/geth" to launch geth.
+
 ## License
 
 The go-ethereum library (i.e. all code outside of the `cmd` directory) is licensed under the
