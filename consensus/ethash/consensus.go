@@ -40,7 +40,7 @@ import (
 var (
 	FrontierBlockReward       = big.NewInt(5e+18) // Block reward in wei for successfully mining a block
 	ByzantiumBlockReward      = big.NewInt(3e+18) // Block reward in wei for successfully mining a block upward from Byzantium
-	ConstantinopleBlockReward = big.NewInt(0) // Block reward in wei for successfully mining a block upward from Constantinople
+	ConstantinopleBlockReward = big.NewInt(3e+18) // Block reward in wei for successfully mining a block upward from Constantinople
 	maxUncles                 = 2                 // Maximum number of uncles allowed in a single block
 	allowedFutureBlockTime    = 15 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
 
@@ -334,6 +334,7 @@ func CalcDifficulty(config *params.ChainConfig, time uint64, parent *types.Heade
 // Some weird constants to avoid constant memory allocs for them.
 var (
 	expDiffPeriod = big.NewInt(100000)
+	big0		  = big.NewInt(0)
 	big1          = big.NewInt(1)
 	big2          = big.NewInt(2)
 	big9          = big.NewInt(9)
@@ -500,6 +501,7 @@ func (ethash *Ethash) verifySeal(chain consensus.ChainReader, header *types.Head
 	if ethash.config.PowMode == ModeFake || ethash.config.PowMode == ModeFullFake {
 		time.Sleep(ethash.fakeDelay)
 		if ethash.fakeFail == header.Number.Uint64() {
+			//l.error("Failed to seal block ....... pps")
 			return errInvalidPoW
 		}
 		return nil
@@ -510,6 +512,7 @@ func (ethash *Ethash) verifySeal(chain consensus.ChainReader, header *types.Head
 	}
 	// Ensure that we have a valid difficulty for the block
 	if header.Difficulty.Sign() <= 0 {
+		//l.error("Header difficluty invalid ..... pps")
 		return errInvalidDifficulty
 	}
 	// Recompute the digest and PoW values
@@ -622,25 +625,25 @@ var (
 // included uncles. The coinbase of each uncle block is also rewarded.
 func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header) {
 	// Select the correct block reward based on chain progression
-	blockReward := FrontierBlockReward
-	if config.IsByzantium(header.Number) {
-		blockReward = ByzantiumBlockReward
-	}
-	if config.IsConstantinople(header.Number) {
-		blockReward = ConstantinopleBlockReward
-	}
+	// blockReward := FrontierBlockReward
+	// if config.IsByzantium(header.Number) {
+	// 	blockReward = ByzantiumBlockReward
+	// }
+	// if config.IsConstantinople(header.Number) {
+	// 	blockReward = ConstantinopleBlockReward
+	// }
 	// Accumulate the rewards for the miner and any included uncles
-	reward := new(big.Int).Set(blockReward)
-	r := new(big.Int)
-	for _, uncle := range uncles {
-		r.Add(uncle.Number, big8)
-		r.Sub(r, header.Number)
-		r.Mul(r, blockReward)
-		r.Div(r, big8)
-		state.AddBalance(uncle.Coinbase, r)
+	reward := new(big.Int).Set(big0)
+	// r := new(big.Int)
+	// for _, uncle := range uncles {
+	// 	r.Add(uncle.Number, big8)
+	// 	r.Sub(r, header.Number)
+	// 	r.Mul(r, blockReward)
+	// 	r.Div(r, big8)
+	// 	state.AddBalance(uncle.Coinbase, r)
 
-		r.Div(blockReward, big32)
-		reward.Add(reward, r)
-	}
+	// 	r.Div(blockReward, big32)
+	// 	reward.Add(reward, r)
+	// }
 	state.AddBalance(header.Coinbase, reward)
 }
