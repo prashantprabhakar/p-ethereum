@@ -23,31 +23,9 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/console/prompt"
 	"github.com/ethereum/go-ethereum/crypto"
 	"gopkg.in/urfave/cli.v1"
 )
-
-// promptPassphrase prompts the user for a passphrase.  Set confirmation to true
-// to require the user to confirm the passphrase.
-func promptPassphrase(confirmation bool) string {
-	passphrase, err := prompt.Stdin.PromptPassword("Password: ")
-	if err != nil {
-		utils.Fatalf("Failed to read password: %v", err)
-	}
-
-	if confirmation {
-		confirm, err := prompt.Stdin.PromptPassword("Repeat password: ")
-		if err != nil {
-			utils.Fatalf("Failed to read password confirmation: %v", err)
-		}
-		if passphrase != confirm {
-			utils.Fatalf("Passwords do not match")
-		}
-	}
-
-	return passphrase
-}
 
 // getPassphrase obtains a passphrase given by the user.  It first checks the
 // --passfile command line flag and ultimately prompts the user for a
@@ -65,13 +43,13 @@ func getPassphrase(ctx *cli.Context, confirmation bool) string {
 	}
 
 	// Otherwise prompt the user for the passphrase.
-	return promptPassphrase(confirmation)
+	return utils.GetPassPhrase("", confirmation)
 }
 
 // signHash is a helper function that calculates a hash for the given message
 // that can be safely used to calculate a signature from.
 //
-// The hash is calulcated as
+// The hash is calculated as
 //   keccak256("\x19Ethereum Signed Message:\n"${message length}${message}).
 //
 // This gives context to the signed message and prevents signing of transactions.
