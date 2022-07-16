@@ -342,6 +342,11 @@ proceedings to the account specified by `--miner.etherbase`. You can further tun
 by changing the default gas limit blocks converge to (`--miner.targetgaslimit`) and the price
 transactions are accepted at (`--miner.gasprice`).
 
+## Launching
+
+After building frin source, run "./build/bin/geth" to launch geth.
+
+
 ## Contribution
 
 Thank you for considering to help out with the source code! We welcome contributions
