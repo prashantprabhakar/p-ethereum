@@ -355,6 +355,7 @@ func (self *TxPool) GetQueuedTransactions() types.Transactions {
 
 // RemoveTransactions removes all given transactions from the pool.
 func (self *TxPool) RemoveTransactions(txs types.Transactions) {
+	glog.V(logger.Info).Infoln("############## Removing txs from pool ##################")
 	self.mu.Lock()
 	defer self.mu.Unlock()
 	for _, tx := range txs {

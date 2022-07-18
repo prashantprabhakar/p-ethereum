@@ -564,7 +564,8 @@ func (env *Work) commitTransactions(transactions types.Transactions, gasPrice *b
 		from, _ := tx.From()
 
 		// Check if it falls within margin. Txs from owned accounts are always processed.
-		if tx.GasPrice().Cmp(gasPrice) < 0 && !env.ownedAccounts.Has(from) {
+		// @pps: allowing txs with zero gas price
+		if tx.GasPrice().Cmp(0) < 0 && !env.ownedAccounts.Has(from) {
 			// ignore the transaction and transactor. We ignore the transactor
 			// because nonce will fail after ignoring this transaction so there's
 			// no point
