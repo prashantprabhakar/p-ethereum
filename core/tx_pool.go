@@ -420,7 +420,8 @@ func (pool *TxPool) SetGasPrice(price *big.Int) {
 	pool.mu.Lock()
 	defer pool.mu.Unlock()
 
-	pool.gasPrice = price
+	// @pps: setting minimum required gas price for txs to zero
+	pool.gasPrice = 0 // price
 	for _, tx := range pool.priced.Cap(price, pool.locals) {
 		pool.removeTx(tx.Hash(), false)
 	}
