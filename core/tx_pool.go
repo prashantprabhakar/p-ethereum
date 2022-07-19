@@ -421,11 +421,11 @@ func (pool *TxPool) SetGasPrice(price *big.Int) {
 	defer pool.mu.Unlock()
 
 	// @pps: setting minimum required gas price for txs to zero
-	pool.gasPrice = 0 // price
+	pool.gasPrice = big.NewInt(0) // price
 	for _, tx := range pool.priced.Cap(price, pool.locals) {
 		pool.removeTx(tx.Hash(), false)
 	}
-	log.Info("Transaction pool price threshold updated", "price", price)
+	log.Info("Transaction pool price threshold updated", "price", big.NewInt(0))
 }
 
 // Nonce returns the next nonce of an account, with all transactions executable
