@@ -490,11 +490,12 @@ func (pool *TxPool) SetGasPrice(price *big.Int) {
 	pool.mu.Lock()
 	defer pool.mu.Unlock()
 
-	pool.gasPrice = price
+	// @pps: Set gas pruce to zero
+	pool.gasPrice = big.NewInt(0)
 	for _, tx := range pool.priced.Cap(price, pool.locals) {
 		pool.removeTx(tx.Hash(), false)
 	}
-	log.Info("Transaction pool price threshold updated", "price", price)
+	log.Info("Transaction pool price threshold updated", "price", big.NewInt(0))
 }
 
 // State returns the virtual managed state of the transaction pool.
